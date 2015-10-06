@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.R.Host.Client {
@@ -15,17 +16,16 @@ namespace Microsoft.R.Host.Client {
         public void Dispose() {
         }
 
-        public Task Busy(IReadOnlyCollection<IRContext> contexts, bool which) {
+        public Task Busy(IReadOnlyCollection<IRContext> contexts, bool which, CancellationToken cancellationToken) {
             return Task.FromResult(true);
         }
 
-        public Task Evaluate(IReadOnlyCollection<IRContext> contexts, IRExpressionEvaluator evaluator)
-        {
+        public Task Evaluate(IReadOnlyCollection<IRContext> contexts, IRExpressionEvaluator evaluator, CancellationToken cancellationToken) {
             _evaluator = evaluator;
             return Task.CompletedTask;
         }
 
-        public Task Connected(string rVersion) {
+        public Task Connected(string rVersion, CancellationToken cancellationToken) {
             return Task.CompletedTask;
         }
 
@@ -33,35 +33,31 @@ namespace Microsoft.R.Host.Client {
             return Task.CompletedTask;
         }
 
-        public async Task<string> ReadConsole(IReadOnlyCollection<IRContext> contexts, string prompt, string buf, int len, bool addToHistory) {
+        public async Task<string> ReadConsole(IReadOnlyCollection<IRContext> contexts, string prompt, string buf, int len, bool addToHistory, CancellationToken cancellationToken) {
             return (await ReadLineAsync(prompt)) + "\n";
         }
 
-        public async Task ShowMessage(IReadOnlyCollection<IRContext> contexts, string s) {
+        public async Task ShowMessage(IReadOnlyCollection<IRContext> contexts, string s, CancellationToken cancellationToken) {
             await Console.Error.WriteLineAsync(s);
         }
 
-        public async Task WriteConsoleEx(IReadOnlyCollection<IRContext> contexts, string buf, OutputType otype) {
+        public async Task WriteConsoleEx(IReadOnlyCollection<IRContext> contexts, string buf, OutputType otype, CancellationToken cancellationToken) {
             var writer = otype == OutputType.Output ? Console.Out : Console.Error;
             await writer.WriteAsync(buf);
         }
 
-        public async Task<YesNoCancel> YesNoCancel(IReadOnlyCollection<IRContext> contexts, string s) {
+        public async Task<YesNoCancel> YesNoCancel(IReadOnlyCollection<IRContext> contexts, string s, CancellationToken cancellationToken) {
             await Console.Error.WriteAsync(s);
-            while (true)
-            {
+            while (true) {
                 string r = await ReadLineAsync(" [yes/no/cancel]> ");
 
-                if (r.StartsWith("y", StringComparison.InvariantCultureIgnoreCase))
-                {
+                if (r.StartsWith("y", StringComparison.InvariantCultureIgnoreCase)) {
                     return Client.YesNoCancel.Yes;
                 }
-                if (r.StartsWith("n", StringComparison.InvariantCultureIgnoreCase))
-                {
+                if (r.StartsWith("n", StringComparison.InvariantCultureIgnoreCase)) {
                     return Client.YesNoCancel.No;
                 }
-                if (r.StartsWith("c", StringComparison.InvariantCultureIgnoreCase))
-                {
+                if (r.StartsWith("c", StringComparison.InvariantCultureIgnoreCase)) {
                     return Client.YesNoCancel.Cancel;
                 }
 
