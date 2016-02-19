@@ -83,6 +83,7 @@
     <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Stubs\StubFactoryTest.cs" />
     <Compile Include="Threading\ControlledTaskSchedulerTest.cs" />
     <Compile Include="Threading\UIThreadHelperTest.cs" />
   </ItemGroup>
@@ -95,6 +96,7 @@
       <StrongName>StrongName</StrongName>
     </FilesToSign>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(RootDirectory)\src\R.Build.Version.targets" />

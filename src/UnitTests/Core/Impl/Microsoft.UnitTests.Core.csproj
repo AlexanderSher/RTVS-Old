@@ -81,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FluentAssertions\FluentAssertionExtensions.cs" />
     <Compile Include="FluentAssertions\ObjectAssertionsExtensions.cs" />
     <Compile Include="Mef\CatalogFactory.cs" />
@@ -92,6 +93,28 @@
     <Compile Include="NSubstitute\Mef\MefSubstituteBuilder.cs" />
     <Compile Include="NSubstitute\Mef\NSubstituteCompositionContainer.cs" />
     <Compile Include="NSubstitute\Mef\NSubstituteExportProvider.cs" />
+    <Compile Include="Stubs\AllMethodsExceptMixinsProxyGeneratorHook.cs" />
+    <Compile Include="Stubs\DefaultValueProviders\ArrayDefaultValueProvider.cs" />
+    <Compile Include="Stubs\DefaultValueProviders\ByRefDefaultValueProvider.cs" />
+    <Compile Include="Stubs\DefaultValueProviders\StubDefaultValueProvider.cs" />
+    <Compile Include="Stubs\DefaultValueProviders\TaskDefaultValueProvider.cs" />
+    <Compile Include="Stubs\DefaultValueService.cs" />
+    <Compile Include="Stubs\ICustomizableInterceptor.cs" />
+    <Compile Include="Stubs\IDefaultValueProvider.cs" />
+    <Compile Include="Stubs\IDefaultValueService.cs" />
+    <Compile Include="Stubs\IInterceptorOperations.cs" />
+    <Compile Include="Stubs\Interceptor.cs" />
+    <Compile Include="Stubs\DefaultValueProviders\StringDefaultValueProvider.cs" />
+    <Compile Include="Stubs\InterceptorOperations.cs" />
+    <Compile Include="Stubs\InvocationData.cs" />
+    <Compile Include="Stubs\IStubFactory.cs" />
+    <Compile Include="Stubs\StubFactory.cs" />
+    <Compile Include="Stubs\StubUtil.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StubUtil.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Stubs\DefaultValueProviders\SystemDefaultValueProvider.cs" />
     <Compile Include="Threading\ControlledTaskScheduler.cs" />
     <Compile Include="Threading\ControlledTaskSchedulerExtensions.cs" />
     <Compile Include="Threading\UIThreadHelper.cs" />
@@ -152,6 +175,15 @@
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Stubs\StubUtil.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StubUtil.generated.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

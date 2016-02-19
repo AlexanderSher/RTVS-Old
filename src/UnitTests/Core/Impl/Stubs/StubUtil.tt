@@ -1,0 +1,79 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+using Microsoft.Common.Core;
+using NSubstitute;
+using NSubstitute.Core;
+
+namespace Microsoft.UnitTests.Core {
+<# CreateStubUtil(); #>
+}
+<#+
+private int maxArgLength = 8;
+
+private void CreateStubUtil() {
+	
+#>
+    public static partial class StubUtil {
+<#+
+    for (var i = 1; i < Math.Pow(2, maxArgLength); i++) {
+		CreateSetMethods(i);
+	}
+#>
+	}
+<#+
+}
+
+private void CreateSetMethods(int i) {
+		var args = GetArgs(i);
+
+		var index = string.Join("", args.Where(a => a.IsOut).Select(a => a.Position));
+		var types = string.Join(", ", args.Select(a => a.ArgType));
+		var names = string.Join(", ", args.Select(a => a.ArgName));
+		var methodType = "FuncOut" + index + "<" + types + ", TResult>";
+#>
+/*        public static void Set<<#=types #>, TResult>(<#=methodType #> method, <#=names #>, TResult result) {
+            Set(method, (out TOut1 arg1) => { arg1 = outArg1; return result; });
+        }
+
+        public static void Set<<#=types #>, TResult>(<#=methodType #> method, <#=methodType #> implementation) {
+            TOut1 p1;
+            method(out p1).ReturnsForAnyArgs(x => {
+                TOut1 ip1;
+                var result = implementation(out ip1);
+                x[0] = ip1;
+                return result;
+            });
+        }
+		*/
+<#+
+}
+
+private List<Arg> GetArgs(int i) {
+	var m = 1;
+	var args = new List<Arg>();
+	while (m <= i) {
+		var arg = new Arg((i & m) != 0, args.Count + 1);
+		args.Add(arg);
+		m <<= 1;
+	}
+	return args;
+}
+
+private class Arg {
+    public bool IsOut { get; private set; }
+    public int Position { get; private set; }
+    public string ArgType { get; private set; }
+    public string ArgName { get; private set; }
+
+    public Arg(bool isOut, int position) {
+		IsOut = isOut;
+	    Position = position;
+	    ArgType = "T" + position;
+		ArgName = ArgType + (isOut ? " outArg" : " inArg") + position;
+	}
+}
+#>

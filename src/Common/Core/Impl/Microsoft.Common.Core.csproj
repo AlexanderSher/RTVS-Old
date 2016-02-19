@@ -80,16 +80,29 @@
     <Compile Include="Telemetry\PropertyNames.cs" />
     <Compile Include="Telemetry\TelemetryArea.cs" />
     <Compile Include="Telemetry\TelemetryServiceBase.cs" />
+    <Compile Include="Delegates.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Delegates.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Delegates.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Delegates.generated.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <FilesToSign Include="$(OutputPath)\$(AssemblyName).dll">
       <Authenticode>Microsoft</Authenticode>
       <StrongName>StrongName</StrongName>
     </FilesToSign>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\R.Build.Version.targets" />

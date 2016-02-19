@@ -1,0 +1,49 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+namespace Microsoft.Common.Core {
+<# CreateDelegates(); #>
+}
+<#+
+private int maxArgLength = 8;
+
+private void CreateDelegates() {
+    for (var i = 1; i < Math.Pow(2, maxArgLength); i++) {
+		CreateDelegate(i);
+	}
+}
+
+private void CreateDelegate(int i) {
+	var m = 1;
+	var args = new List<Arg>();
+	while (m <= i) {
+		var arg = new Arg((i & m) != 0, args.Count + 1);
+		args.Add(arg);
+		m <<= 1;
+	}
+
+	var name = string.Join("", args.Select(a => a.ArgPosition));
+	var types = string.Join(", ", args.Select(a => a.ArgType));
+	var names = string.Join(", ", args.Select(a => a.ArgName));
+#>
+    public delegate void ActionOut<#=name#><<#=types#>>(<#=names#>);
+	public delegate TResult FuncOut<#=name#><<#=types#>, TResult>(<#=names#>);
+<#+
+}
+
+private class Arg {
+    public string ArgPosition { get; private set; }
+    public string ArgType { get; private set; }
+    public string ArgName { get; private set; }
+
+    public Arg(bool isOut, int position) {
+	    ArgPosition = isOut ? "" + position : "";
+	    ArgType = (isOut ? "T" : "in T") + position;
+		ArgName = (isOut ? "out T" : "T") + position + " arg" + position;
+	}
+}
+#>
